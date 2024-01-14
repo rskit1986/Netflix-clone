@@ -7,7 +7,7 @@ on:
 
 
 jobs:
-  build:
+  build-analyze-scan:
     name: Build
     runs-on: ubuntu-latest
     steps:
@@ -39,6 +39,19 @@ jobs:
             docker push balajircs/netflix:latest  
         env:
             DOCKER_CLI_ACI: 1
+
+  deploy:    
+        needs: build-analyze-scan  
+        runs-on: [devopsvm]  #use your label here
+        steps:
+          - name: Pull the docker image
+            run: docker pull balajircs/netflix:latest
+          - name: Trivy image scan
+            run: trivy image balajircs/netflix:latest
+          - name: Run the container netflix
+            run: docker run -d --name netflix -p 8081:80 balajircs/netflix:latest
+
+  
       # If you wish to fail your job when the Quality Gate is red, uncomment the
       # following lines. This would typically be used to fail a deployment.
       # - uses: sonarsource/sonarqube-quality-gate-action@master
