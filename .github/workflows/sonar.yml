@@ -42,7 +42,7 @@ jobs:
 
   deploy:    
         needs: build-analyze-scan  
-        runs-on: [devopsvm]  #use your label here
+        runs-on: [devopvm]  #use your label here
         steps:
           - name: Pull the docker image
             run: docker pull balajircs/netflix:latest
